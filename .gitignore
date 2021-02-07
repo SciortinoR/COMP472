@@ -14,3 +14,7 @@ venv.bak/
 
 # Editors
 .vscode/
+
+# Files
+*.pdf
+*.txt
