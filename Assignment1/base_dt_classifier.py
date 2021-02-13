@@ -7,8 +7,8 @@ x_train, x_test, y_train, y_test = pre_process(open('all_sentiment_shuffled.txt'
 # Plot the class counts
 plot(y_train + y_test)
 
-# Define MNB Clf
-clf = DecisionTreeClassifier()
+# Define DT Clf
+clf = DecisionTreeClassifier(criterion="entropy")
 clf.fit(x_train, y_train)
 y_pred = clf.predict(x_test)
 
