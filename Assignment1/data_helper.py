@@ -53,11 +53,22 @@ def plot(labels):
     plt.title('Sentiment Count')
     plt.show()
 
-def write_stats(y_pred, y_test, out_name):
+def write_stats(y_pred, y_test, out_name, params=False):
     global SPLIT
 
-    file = open(out_name, 'w')
-
+    if not params:
+        file = open(out_name, 'w')
+    else:
+        report = classification_report(y_test, y_pred, target_names=["Negative", "Positive"], output_dict=True)
+        file = open(f'{out_name}-{report["accuracy"]}.txt', 'w')
+        file.write("Best-DT Params Used: \n")
+        file.write(f"criterion : {params[0]}\n")
+        file.write(f"splitter : best\n")
+        file.write(f"max_depth : None\n")
+        file.write(f"min_samples_split : {params[1]}\n")
+        file.write(f"min_samples_leaf : {params[2]}\n")
+        file.write(f"max_features : None\n\n")
+        
     file.write("Classification Report:\n")
     file.write(f'{classification_report(y_test, y_pred, target_names=["Negative", "Positive"])}\n')
 
