@@ -2,8 +2,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn.naive_bayes import MultinomialNB
 
 from data_processor import build_dataset, split_data
+
+
+# Train and test the Multinomial Naive Bayes classifier
+def train_and_test_nb(x_train, x_test, y_train, y_test):
+    print("Training Multinomial Naive Bayes Classifier....")
+
+    # Train & predict
+    classifier = MultinomialNB().fit(x_train, y_train)
+    y_pred = classifier.predict(x_test)
+
+    write_stats(y_pred, y_test, "Multinomial_Naive_Bayes-Sentiment.txt", 0.2)
 
 
 def plot_labels(labels):
@@ -37,6 +49,9 @@ if __name__ == "__main__":
     # and the the other 80% to train the models.
     x_train, x_test, y_train, y_test = split_data(
         dataset[:, :-1], dataset[:, -1], test_size=0.2)
+
+    # Naive Base Classification
+    train_and_test_nb(x_train, x_test, y_train, y_test)
 
     # Plot labels
     plot_labels(np.concatenate([y_train, y_test]))
