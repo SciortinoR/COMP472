@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.tree import DecisionTreeClassifier
 
 from data_processor import build_dataset, split_data
 
@@ -16,6 +17,17 @@ def train_and_test_nb(x_train, x_test, y_train, y_test):
     y_pred = classifier.predict(x_test)
 
     write_stats(y_pred, y_test, "Multinomial_Naive_Bayes-Sentiment.txt", 0.2)
+
+
+# Train and test the Base Decision Tree Classifier
+def train_and_test_base_dt(x_train, x_test, y_train, y_test):
+    print("Training Decision Tree Classifier...")
+
+    classifier = DecisionTreeClassifier(criterion="entropy").fit(
+        x_train, y_train)
+    y_pred = classifier.predict(x_test)
+
+    write_stats(y_pred, y_test, "Base_Decision_Tree-Sentiment.txt", 0.2)
 
 
 def plot_labels(labels):
@@ -52,6 +64,9 @@ if __name__ == "__main__":
 
     # Naive Base Classification
     train_and_test_nb(x_train, x_test, y_train, y_test)
+
+    # Base Decision Tree Classification
+    train_and_test_base_dt(x_train, x_test, y_train, y_test)
 
     # Plot labels
     plot_labels(np.concatenate([y_train, y_test]))
