@@ -10,7 +10,12 @@ def generate_stop_words(datafile):
 
 
 def clean_string(text, stopwords):
-    return [s.translate(str.maketrans('', '', string.punctuation)) for s in list(filter(lambda a: a not in stopwords, text))]
+    clean = []
+    for w in text:
+        w = w.translate(str.maketrans('', '', string.punctuation))
+        if w and w not in stopwords:
+            clean.append(w)
+    return clean
 
 
 def split_data(features, labels, test_size):
@@ -37,7 +42,8 @@ def scale_features(x_train, x_test):
 def build_dataset(datafile, remove_stopwords=False):
     freqs = []
     y = []
-    stop_words = distinct = {}
+    stop_words = {}
+    distinct = {}
     if remove_stopwords:
         stop_words = generate_stop_words(datafile)
 
