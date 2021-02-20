@@ -12,7 +12,7 @@ SPLIT = 0
 NUM_WORDS = 54090
 NUM_INSTANCES = 11914
 
-def pre_process(file):
+def pre_process(file, test_only=False):
     global SPLIT, NUM_WORDS, NUM_INSTANCES
 
     labels = []
@@ -39,6 +39,10 @@ def pre_process(file):
                     features[j][word_hash[w]] += 1
 
     file.close()
+
+    if test_only:
+        return features, labels
+
     SPLIT = int(0.8 * len(labels))
     return features[:SPLIT], features[SPLIT:], labels[:SPLIT], labels[SPLIT:]
 
@@ -53,7 +57,7 @@ def plot(labels):
     plt.title('Sentiment Count')
     plt.show()
 
-def write_stats(y_pred, y_test, out_name, params=False):
+def write_stats(y_pred, y_test, out_name, params=False, test_only=False):
     global SPLIT
 
     if not params:
@@ -76,6 +80,9 @@ def write_stats(y_pred, y_test, out_name, params=False):
     file.write(f'{np.array2string(confusion_matrix(y_test, y_pred))}\n\n')
 
     file.write('Instance #, Prediction:\n')
-    file.writelines(f'{i}, {n}\n' for i, n in enumerate(y_pred, SPLIT))
+    if test_only:
+        file.writelines(f'{i}, {n}\n' for i, n in enumerate(y_pred))
+    else:
+        file.writelines(f'{i}, {n}\n' for i, n in enumerate(y_pred, SPLIT))
 
     file.close()
