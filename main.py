@@ -1,6 +1,8 @@
 from joblib import dump, load
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+import getopt
 
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.naive_bayes import MultinomialNB
@@ -60,9 +62,9 @@ def write_model(classifier, filename):
     dump(classifier, filename.split('.')[0] + ".joblib")
 
 
-if __name__ == "__main__":
+def train_models(filename):
     # Read and clean the raw data
-    dataset = build_dataset("./all_sentiment_shuffled.txt", True)
+    dataset = build_dataset(filename, True)
 
     # Split the data. We use 20% of the date as a test partition
     # and the the other 80% to train the models.
@@ -82,3 +84,35 @@ if __name__ == "__main__":
 
     # Keep plot figure persistent. This is a blocking call.
     plt.show()
+
+
+if __name__ == "__main__":
+    datafile = None
+    train = None
+
+    argv = sys.argv[1:]
+    try:
+        opts, args = getopt.getopt(argv, "i:", ["train", "test", "input="])
+    except getopt.GetoptError:
+        print("Usage: python main.py -i <datafile> [--train | --test]")
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ["-i", "--input"]:
+            datafile = arg
+        elif opt == "--train":
+            train = True
+        elif opt == "--test":
+            train = False
+
+    if datafile is None:
+        print("Please specify a source data file")
+        print("Usage: python main.py -i <datafile> [--train | --test]")
+        sys.exit(2)
+    if train is None:
+        print("Please specify whether to train or test on this data")
+        print("Usage: python main.py -i <datafile> [--train | --test]")
+        sys.exit(2)
+
+    if train:
+        train_models(datafile)
