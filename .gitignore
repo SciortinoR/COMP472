@@ -18,3 +18,4 @@ venv.bak/
 # Files
 *.pdf
 *.txt
+*joblib
