@@ -1,4 +1,5 @@
 import numpy as np
+import re
 from collections import Counter
 import string
 from sklearn.preprocessing import StandardScaler
@@ -11,8 +12,24 @@ def generate_stop_words(datafile):
 
 def clean_string(text, stopwords):
     clean = []
-    for w in text:
+
+    raw_words = " ".join(text)
+    raw_words = re.sub("\s\'","\'", raw_words)
+    raw_words = re.sub("\sn\'t", "n\'t", raw_words)
+    raw_words = re.sub("it\'s", "it is", raw_words);
+    raw_words = re.sub("he\'s", "he is", raw_words);
+    raw_words = re.sub("she\'s", "she is", raw_words);
+    raw_words = re.sub("they\'re", "they are", raw_words);
+    raw_words = re.sub("i\'ll", "i will", raw_words);
+    raw_words = re.sub("isn\'t", "is not", raw_words);
+    raw_words = re.sub("aren\'t", "are not", raw_words);
+    raw_words = re.sub("wouldn\'t", "would not", raw_words);
+
+    word_list = raw_words.split();
+
+    for w in word_list:
         w = w.translate(str.maketrans('', '', string.punctuation))
+        w = w.translate(str.maketrans('', '', string.digits))
         if w and w not in stopwords:
             clean.append(w)
     return clean
