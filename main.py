@@ -1,3 +1,4 @@
+from joblib import dump, load
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,6 +18,7 @@ def train_and_test_nb(x_train, x_test, y_train, y_test):
     y_pred = classifier.predict(x_test)
 
     write_stats(y_pred, y_test, "Multinomial_Naive_Bayes-Sentiment.txt", 0.2)
+    return classifier
 
 
 # Train and test the Base Decision Tree Classifier
@@ -28,6 +30,7 @@ def train_and_test_base_dt(x_train, x_test, y_train, y_test):
     y_pred = classifier.predict(x_test)
 
     write_stats(y_pred, y_test, "Base_Decision_Tree-Sentiment.txt", 0.2)
+    return classifier
 
 
 def plot_labels(labels):
@@ -53,6 +56,10 @@ def write_stats(y_pred, y_test, fname, test_size):
             zip(y_pred, y_test), 0))
 
 
+def write_model(classifier, filename):
+    dump(classifier, filename.split('.')[0] + ".joblib")
+
+
 if __name__ == "__main__":
     # Read and clean the raw data
     dataset = build_dataset("./all_sentiment_shuffled.txt", True)
@@ -63,10 +70,12 @@ if __name__ == "__main__":
         dataset[:, :-1], dataset[:, -1], test_size=0.2)
 
     # Naive Base Classification
-    train_and_test_nb(x_train, x_test, y_train, y_test)
+    cnb = train_and_test_nb(x_train, x_test, y_train, y_test)
+    write_model(cnb, "multinomial-model")
 
     # Base Decision Tree Classification
-    train_and_test_base_dt(x_train, x_test, y_train, y_test)
+    cdt = train_and_test_base_dt(x_train, x_test, y_train, y_test)
+    write_model(cdt, "decision-tree-model")
 
     # Plot labels
     plot_labels(np.concatenate([y_train, y_test]))
