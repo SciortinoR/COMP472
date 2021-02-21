@@ -27,10 +27,24 @@ def train_nb(x_train, x_test, y_train, y_test):
 def train_base_dt(x_train, x_test, y_train, y_test):
     print("Training Decision Tree Classifier...")
 
+    # Train & predict
     classifier = DecisionTreeClassifier(criterion="entropy").fit(
         x_train, y_train)
     test_classifer(classifier, x_test, y_test,
                    "Base_Decision_Tree-Sentiment.txt")
+    return classifier
+
+
+# Train and test the Best Decision Tree Classifier
+def train_best_dt(x_train, x_test, y_train, y_test):
+    print("Training Best Decision Tree Classifier...")
+
+    # Train & predict
+    classifier = DecisionTreeClassifier(criterion="gini", splitter='best', max_depth=None, 
+        min_samples_split=2, min_samples_leaf=1, max_features=None).fit(
+            x_train, y_train)
+    test_classifer(classifier, x_test, y_test,
+                   "Best_Decision_Tree-Sentiment.txt")
     return classifier
 
 
@@ -91,15 +105,20 @@ def train_models(filename, persist_models=True):
         dataset[:, :-1], dataset[:, -1], test_size=0.2)
 
     # Naive Base Classification
-    cnb = train_nb(x_train, x_test, y_train, y_test)
+    model = train_nb(x_train, x_test, y_train, y_test)
     if persist_models:
-        write_model(cnb, "multinomial-model")
+        write_model(model, "multinomial-model")
 
     # Base Decision Tree Classification
-    cdt = train_base_dt(x_train, x_test, y_train, y_test)
+    model = train_base_dt(x_train, x_test, y_train, y_test)
     if persist_models:
-        write_model(cdt, "decision-tree-model")
+        write_model(model, "decision-tree-model")
 
+    # Best Decision Tree Classification
+    model = train_best_dt(x_train, x_test, y_train, y_test)
+    if persist_models:
+        write_model(model, "best-decision-tree-model")
+        
     # Plot labels
     plot_labels(np.concatenate([y_train, y_test]))
 
@@ -113,12 +132,16 @@ def test_models(filename):
     features, labels = dataset[:, :-1], dataset[:, -1]
 
     # Test Multinomal Naive Bayes Model
-    cnb = load_model("multinomial-model")
-    test_classifer(cnb, features, labels, "multinomial-test.txt")
+    model = load_model("multinomial-model")
+    test_classifer(model, features, labels, "multinomial-test.txt")
 
     # Test Base Decision Tree Model
-    cnb = load_model("decision-tree-model")
-    test_classifer(cnb, features, labels, "decision-tree-test.txt")
+    model = load_model("decision-tree-model")
+    test_classifer(model, features, labels, "decision-tree-test.txt")
+
+    # Test Best  Decision Tree Model
+    model = load_model("best-decision-tree-model")
+    test_classifer(model, features, labels, "best-decision-tree-test.txt")
 
 
 if __name__ == "__main__":
