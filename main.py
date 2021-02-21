@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import getopt
+import os
 
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.naive_bayes import MultinomialNB
@@ -12,27 +13,30 @@ from data_processor import build_dataset, split_data
 
 
 # Train and test the Multinomial Naive Bayes classifier
-def train_and_test_nb(x_train, x_test, y_train, y_test):
+def train_nb(x_train, x_test, y_train, y_test):
     print("Training Multinomial Naive Bayes Classifier....")
 
     # Train & predict
     classifier = MultinomialNB().fit(x_train, y_train)
-    y_pred = classifier.predict(x_test)
-
-    write_stats(y_pred, y_test, "Multinomial_Naive_Bayes-Sentiment.txt", 0.2)
+    test_classifer(classifier, x_test, y_test,
+                   "Multinomial_Naive_Bayes-Sentiment.txt")
     return classifier
 
 
 # Train and test the Base Decision Tree Classifier
-def train_and_test_base_dt(x_train, x_test, y_train, y_test):
+def train_base_dt(x_train, x_test, y_train, y_test):
     print("Training Decision Tree Classifier...")
 
     classifier = DecisionTreeClassifier(criterion="entropy").fit(
         x_train, y_train)
-    y_pred = classifier.predict(x_test)
-
-    write_stats(y_pred, y_test, "Base_Decision_Tree-Sentiment.txt", 0.2)
+    test_classifer(classifier, x_test, y_test,
+                   "Base_Decision_Tree-Sentiment.txt")
     return classifier
+
+
+def test_classifer(classifer, features, labels, out):
+    y_pred = classifer.predict(features)
+    write_stats(y_pred, labels, out.split('.')[0] + ".txt")
 
 
 def plot_labels(labels):
@@ -45,7 +49,7 @@ def plot_labels(labels):
     plt.title('Sentiment Count')
 
 
-def write_stats(y_pred, y_test, fname, test_size):
+def write_stats(y_pred, y_test, fname):
     """ Write overall classifier metrics to file """
     with open(fname, 'w') as f:
         f.write("Classification Report:\n")
@@ -59,10 +63,25 @@ def write_stats(y_pred, y_test, fname, test_size):
 
 
 def write_model(classifier, filename):
-    dump(classifier, filename.split('.')[0] + ".joblib")
+    base_filename = filename.split('.')[0]
+    filename_suffix = "joblib"
+    print(f"Writing {base_filename} classifier to disk...")
+    dump(classifier, os.path.join(os.getcwd(),
+                                  base_filename + "." + filename_suffix))
 
 
-def train_models(filename):
+def load_model(filename):
+    base_filename = filename.split('.')[0]
+    filename_suffix = "joblib"
+    try:
+        return load(os.path.join(os.getcwd(), base_filename + "." + filename_suffix))
+    except FileNotFoundError:
+        print("Error loading models, make sure a joblib model file is present in the current directory.")
+        print("Running this script with the `--train` option will generate the necessary files.")
+        sys.exit(1)
+
+
+def train_models(filename, persist_models=True):
     # Read and clean the raw data
     dataset = build_dataset(filename, True)
 
@@ -72,12 +91,14 @@ def train_models(filename):
         dataset[:, :-1], dataset[:, -1], test_size=0.2)
 
     # Naive Base Classification
-    cnb = train_and_test_nb(x_train, x_test, y_train, y_test)
-    write_model(cnb, "multinomial-model")
+    cnb = train_nb(x_train, x_test, y_train, y_test)
+    if persist_models:
+        write_model(cnb, "multinomial-model")
 
     # Base Decision Tree Classification
-    cdt = train_and_test_base_dt(x_train, x_test, y_train, y_test)
-    write_model(cdt, "decision-tree-model")
+    cdt = train_base_dt(x_train, x_test, y_train, y_test)
+    if persist_models:
+        write_model(cdt, "decision-tree-model")
 
     # Plot labels
     plot_labels(np.concatenate([y_train, y_test]))
@@ -86,24 +107,42 @@ def train_models(filename):
     plt.show()
 
 
+def test_models(filename):
+    # Read and clean the raw data
+    dataset = build_dataset(filename, True)
+    features, labels = dataset[:, :-1], dataset[:, -1]
+
+    # Test Multinomal Naive Bayes Model
+    cnb = load_model("multinomial-model")
+    test_classifer(cnb, features, labels, "multinomial-test.txt")
+
+    # Test Base Decision Tree Model
+    cnb = load_model("decision-tree-model")
+    test_classifer(cnb, features, labels, "decision-tree-test.txt")
+
+
 if __name__ == "__main__":
     datafile = None
     train = None
+    persist = True
 
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv, "i:", ["train", "test", "input="])
+        opts, args = getopt.getopt(
+            argv, "i:", ["train", "test", "no-save", "input="])
     except getopt.GetoptError:
-        print("Usage: python main.py -i <datafile> [--train | --test]")
+        print("Usage: python main.py -i <datafile> [--train | --test] ")
         sys.exit(2)
 
     for opt, arg in opts:
         if opt in ["-i", "--input"]:
-            datafile = arg
+            datafile = os.path.join(os.getcwd(), arg)
         elif opt == "--train":
             train = True
         elif opt == "--test":
             train = False
+        elif opt == "--no-save":
+            persist = False
 
     if datafile is None:
         print("Please specify a source data file")
@@ -115,4 +154,6 @@ if __name__ == "__main__":
         sys.exit(2)
 
     if train:
-        train_models(datafile)
+        train_models(datafile, persist)
+    else:
+        test_models(datafile)
