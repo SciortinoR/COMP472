@@ -70,7 +70,8 @@ def output(filename, success, out, out_name):
             for item in out:
                 if type(item) == str:
                     f.write(item)
-                write_puzzle(f, item)
+                else:
+                    write_puzzle(f, item)
     f.close()
 
 
@@ -78,18 +79,21 @@ def output(filename, success, out, out_name):
 def generate_puzzles(size, num_puzzles):
     puzzles = []
     p = [str(i+1) for i in range(size**2)]
-
-    for _ in range(num_puzzles):
-        shuffle(p)
-        puzzles.append(' '.join(p))
     
+    with open("puzzles", 'w') as f:
+        for _ in range(num_puzzles):
+            shuffle(p)
+            f.write(' '.join(p)+'\n')
+            puzzles.append(make_puzzle_tuples(size, p))
+    f.close()
+
     return puzzles
 
+def make_puzzle_tuples(size, puzzle):
+    i = 0
+    res = []
+    for _ in range(size):
+        res.append(tuple(map(int, [puzzle[j] for j in range(i, i+size)])))
+        i += size
 
-if __name__ == "__main__":
-    puzzles = generate_puzzles(3, 20)
-    with open("puzzles", 'w') as f:
-        for p in puzzles:
-            f.write(p+'\n')
-    
-    f.close()
+    return tuple(res)
