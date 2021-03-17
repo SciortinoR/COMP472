@@ -89,6 +89,8 @@ def generate_puzzles(size, num_puzzles):
 
     return puzzles
 
+
+# Makes tuples of string puzzle
 def make_puzzle_tuples(size, puzzle):
     i = 0
     res = []
