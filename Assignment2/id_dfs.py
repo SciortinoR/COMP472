@@ -3,7 +3,7 @@ import collections
 import puzzle_helper as pzh
 
 
-def iterative_deepening(puzzle):
+def iterative_deepening(puzzle, heuristic=None, skip_time=False):
     start_time = time.time()
     
     full_search_space = []
@@ -13,10 +13,10 @@ def iterative_deepening(puzzle):
     limit = 0
     while True:
         # Check execution time limit
-        if time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
+        if not skip_time and time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
             break
         
-        success, solution_space, search_space, max_depth_seen = id_dfs(puzzle, limit, start_time)
+        success, solution_space, search_space, max_depth_seen = id_dfs(puzzle, limit, start_time, skip_time)
         
         full_search_space.append(f"DFS Limit {limit}: \n\n")
         full_search_space += search_space
@@ -27,10 +27,10 @@ def iterative_deepening(puzzle):
 
         limit += 1
     
-    return success, solution_space, full_search_space, time.time() - start_time
+    return solution_space, full_search_space, time.time() - start_time, success
     
     
-def id_dfs(puzzle, limit, start_time):
+def id_dfs(puzzle, limit, start_time, skip_time):
     states = [(puzzle, None, 0)]
     
     # Holds state to parent_state mapping (for retracing solution path)
@@ -47,7 +47,7 @@ def id_dfs(puzzle, limit, start_time):
 
     while states:
         # Check execution time limit
-        if time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
+        if not skip_time and time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
             break
         
         puzzle, parent, depth = states.pop()
@@ -79,6 +79,8 @@ def id_dfs(puzzle, limit, start_time):
 
 
 if __name__ == "__main__":
-    success, solution, search, _ = iterative_deepening(((6,1,2),(7,8,3),(5,4,9)))
+    print(f"Running Iterative Deepening DFS on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
+    solution, search, _, success = iterative_deepening(((6,1,2),(7,8,3),(5,4,9)))
     pzh.output("id_dfs", success, solution, 'solution')
     pzh.output("id_dfs", success, search, 'search')
+    print('Done!')
