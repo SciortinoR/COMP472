@@ -7,8 +7,8 @@ from puzzle_helper import write_analysis, extend_puzzles, \
 
 
 PUZZLE_START_SIZE = 3
-PUZZLE_END_SIZE = 7
-NUM_PUZZLES = 10
+PUZZLE_END_SIZE = 6
+NUM_PUZZLES = 20
 
 
 def run_scale_up(a_type, f, linear_puzzles, algo_set):
