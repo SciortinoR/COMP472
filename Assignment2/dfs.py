@@ -3,7 +3,7 @@ import collections
 import puzzle_helper as pzh
 
 
-def dfs(puzzle):
+def dfs(puzzle, heuristic=None, skip_time=False):
     start_time = time.time()
     
     states = [(puzzle, None)]
@@ -17,7 +17,7 @@ def dfs(puzzle):
     
     while states:
         # Check execution time limit
-        if time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
+        if not skip_time and time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
             break
         
         puzzle, parent = states.pop()
@@ -39,10 +39,12 @@ def dfs(puzzle):
     
     solution_space = pzh.retrace_solution_path(puzzle, parents, success)
 
-    return success, solution_space, search_space, (time.time() - start_time)
+    return solution_space, search_space, (time.time() - start_time), success
 
 
 if __name__ == "__main__":
-    success, solution, search, _ = dfs(((6,1,2),(7,8,3),(5,4,9)))
+    print(f"Running DFS on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
+    solution, search, _, success = dfs(((6,1,2),(7,8,3),(5,4,9)))
     pzh.output("dfs", success, solution, 'solution')
     pzh.output("dfs", success, search, 'search')
+    print('Done!')
