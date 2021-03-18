@@ -78,13 +78,13 @@ def a_star(puzzle, heuristic, skip_time=False):
 
 if __name__ == "__main__":
     print(f"Running A_Star_H1 on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
-    solution, search, _, success = a_star(((6,1,2),(7,8,3),(5,4,9)), h1)
+    solution, search, ex_time, success = a_star(((6,1,2),(7,8,3),(5,4,9)), h1)
     pzh.output("a_star_h1", success, solution, 'solution')
     pzh.output("a_star_h1", success, search, 'search')
-    print("Done!")
+    print(f'Done! Execution Time: {ex_time} seconds')
 
     print(f"Running A_Star_H2 on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
-    solution, search, _, success = a_star(((6,1,2),(7,8,3),(5,4,9)), h2)
+    solution, search, ex_time, success = a_star(((6,1,2),(7,8,3),(5,4,9)), h2)
     pzh.output("a_star_h2", success, solution, 'solution')
     pzh.output("a_star_h2", success, search, 'search')
-    print("Done!")
+    print(f'Done! Execution Time: {ex_time} seconds')

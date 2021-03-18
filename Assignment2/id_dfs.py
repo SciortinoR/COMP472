@@ -80,7 +80,7 @@ def id_dfs(puzzle, limit, start_time, skip_time):
 
 if __name__ == "__main__":
     print(f"Running Iterative Deepening DFS on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
-    solution, search, _, success = iterative_deepening(((6,1,2),(7,8,3),(5,4,9)))
+    solution, search, ex_time, success = iterative_deepening(((6,1,2),(7,8,3),(5,4,9)))
     pzh.output("id_dfs", success, solution, 'solution')
     pzh.output("id_dfs", success, search, 'search')
-    print('Done!')
+    print(f'Done! Execution Time: {ex_time} seconds')
