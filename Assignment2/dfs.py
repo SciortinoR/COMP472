@@ -4,28 +4,28 @@ from typing import List
 import anytree
 import utils
 
-def depth_first_search(input_puzzle: List): 
+def depth_first_search(input_puzzle): 
+    print("DEPTH FIRST SEARCH")
+
     stack = deque()
-    stack.append(anytree.AnyNode(id="root", value=input_puzzle))
+    stack.append((input_puzzle, None))
 
+    discovered = set([input_puzzle])
+ 
     while stack:
-        current_node = stack.pop()
+        current_puzzle, parent = stack.pop()
+        current_node = anytree.AnyNode(value=current_puzzle, parent=parent)
 
-        print(current_node.value)
-
-        if utils.is_goal(current_node.value):
-            return current_node.value
-
-        if anytree.search.find(current_node, lambda node: node.value == current_node.value) is not None:
-            continue
+        if utils.is_goal(current_puzzle):
+            print("GOAL REACHED")
+            return current_puzzle
 
         dim = (len(input_puzzle), len(input_puzzle[0]))
-        pos = find_nine(input_puzzle=input_puzzle) 
+        pos = utils.find_nine(input_puzzle=current_puzzle) 
 
-        for move in reversed(get_available_moves(y=pos[0], x=pos[1], max_y=dim[0], max_x=dim[1])): 
-            new_puzzle = generate_move_puzzle(input_puzzle, pos, move)
-           
-            print('new puzzle {}', new_puzzle)
-
-            if anytree.search.find(current_node, lambda node: node.value == new_puzzle) is None:
-                stack.append(anytree.AnyNode(value=new_puzzle, parent=current_node))
+        for move in reversed(utils.get_available_moves(y=pos[0], x=pos[1], max_y=dim[0], max_x=dim[1])): 
+            new_puzzle = utils.generate_move_puzzle(current_puzzle, pos, move)
+            
+            if new_puzzle not in discovered:
+                discovered.add(new_puzzle)
+                stack.append((new_puzzle, current_node))  

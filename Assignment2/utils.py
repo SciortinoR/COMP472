@@ -23,7 +23,7 @@ def get_available_moves(y: int, x: int, max_y: int, max_x: int) -> List:
     
     return moves  
 
-def find_nine(input_puzzle: List) -> Tuple[int, int]:
+def find_nine(input_puzzle) -> Tuple[int, int]:
     for y in range(0, len(input_puzzle)):
         for x in range(0, len(input_puzzle[0])):
             if input_puzzle[y][x] == 9:
@@ -39,30 +39,52 @@ def is_goal(input_puzzle) -> bool:
                 return False
     return True
 
-def generate_move_puzzle(original, pos: Tuple, move: Moves):
+def generate_move_puzzle(original, pos: Tuple, move: Moves):  
+    nine_y, nine_x = pos
     new = []
-    if move == Moves.LEFT:
-        new[pos[0]][pos[1]] = new[pos[0]][pos[1] - 1]
-        new[pos[0]][pos[1] - 1] = 9;
-        
-        return new
-    elif move == Moves.RIGHT:
-        new[pos[0]][pos[1]] = new[pos[0]][pos[1] + 1]
-        new[pos[0]][pos[1] + 1] = 9;
-        
-        return new
-    elif move == Moves.UP:
-        new[pos[0]][pos[1]] = new[pos[0] - 1][pos[1]]
-        new[pos[0] - 1][pos[1]] = 9;
-        
-        return new
-
+    if move == Moves.UP:
+        for y in range(0, len(original)):
+            row = [];
+            for x in range(0, len(original[0])):
+                if y == nine_y - 1 and x == nine_x:
+                    row.append(9)
+                elif y == nine_y and x == nine_x:
+                    row.append(original[y - 1][x])
+                else:
+                    row.append(original[y][x])
+            new.append(tuple(row))
     elif move == Moves.DOWN:
-        new[pos[0]][pos[1]] = new[pos[0] + 1][pos[1]]
-        new[pos[0] + 1][pos[1]] = 9;
-        
-        return new
+        for y in range(0, len(original)):
+            row = [];
+            for x in range(0, len(original[0])):
+                if y == nine_y + 1 and x == nine_x:
+                    row.append(9)
+                elif y == nine_y and x == nine_x:
+                    row.append(original[y + 1][x])
+                else:
+                    row.append(original[y][x])
+            new.append(tuple(row))
+    elif move == Moves.LEFT:
+        for y in range(0, len(original)):
+            row = [];
+            for x in range(0, len(original[0])):
+                if y == nine_y and x == nine_x - 1:
+                    row.append(9)
+                elif y == nine_y and x == nine_x:
+                    row.append(original[y][x - 1])
+                else:
+                    row.append(original[y][x])
+            new.append(tuple(row))
     else:
-        return new
+        for y in range(0, len(original)):
+            row = [];
+            for x in range(0, len(original[0])):
+                if y == nine_y and x == nine_x + 1:
+                    row.append(9)
+                elif y == nine_y and x == nine_x:
+                    row.append(original[y][x + 1])
+                else:
+                    row.append(original[y][x])
+            new.append(tuple(row))
 
-
+    return tuple(new)
