@@ -23,8 +23,8 @@ def analyze(puzzles, algo, heuristic, skip_time):
 
         tot_no_sol += not success
         tot_ex_time += execution_time
-        tot_sol_p_l += len(solution_space) - 1
-        tot_search_p_l += len(search_space) - 1
+        tot_sol_p_l += len(solution_space)
+        tot_search_p_l += len(search_space)
 
     return tot_sol_p_l, tot_search_p_l, tot_ex_time, tot_no_sol, tot_sol_p_l / n, \
             tot_search_p_l / n, tot_ex_time / n, tot_no_sol / n
