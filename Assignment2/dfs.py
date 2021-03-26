@@ -45,6 +45,6 @@ def dfs(puzzle, heuristic=None, skip_time=False):
 if __name__ == "__main__":
     print(f"Running DFS on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
     solution, search, ex_time, success = dfs(((6,1,2),(7,8,3),(5,4,9)))
-    pzh.output("dfs", success, solution, 'solution')
-    pzh.output("dfs", success, search, 'search')
+    pzh.output("DFS", success, solution, 'solution')
+    pzh.output("DFS", success, search, 'search')
     print(f'Done! Execution Time: {ex_time} seconds')

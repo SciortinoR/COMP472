@@ -89,6 +89,6 @@ if __name__ == "__main__":
     for i, h in enumerate([h1, h2], 1):
         print(f"Running A_Star_H{i} on test puzzle ((6,1,2),(7,8,3),(5,4,9))...")
         solution, search, ex_time, success = a_star(((6,1,2),(7,8,3),(5,4,9)), h1)
-        pzh.output(f"a_star_h{i}", success, solution, 'solution')
-        pzh.output(f"a_star_h{i}", success, search, 'search')
+        pzh.output(f"A_Star_H{i}", success, solution, 'solution')
+        pzh.output(f"A_Star_H{i}", success, search, 'search')
         print(f'Done! Execution Time: {ex_time} seconds')
