@@ -44,7 +44,7 @@ def a_star(puzzle, heuristic, skip_time=False):
 
     # Min-Heap storing (f_cost, g_cost, parent, state)
     heap = []
-    heapq.heappush(heap, (0, 0, None, puzzle))
+    heapq.heappush(heap, (0, float('inf'), 0, None, puzzle))
     
     # Holds state to parent_state mapping (for retracing solution path)
     parents = collections.defaultdict()
@@ -57,7 +57,7 @@ def a_star(puzzle, heuristic, skip_time=False):
         if not skip_time and time.time() - start_time >= pzh.EXECUTION_TIME_LIMIT:
             break
         
-        _, g_cost, parent, puzzle = heapq.heappop(heap)
+        _, h_cost, g_cost, parent, puzzle = heapq.heappop(heap)
         
         # Skip puzzles already visited with lower costs
         if puzzle in vis:
@@ -67,8 +67,8 @@ def a_star(puzzle, heuristic, skip_time=False):
         parents[puzzle] = parent
         vis.add(puzzle)
         
-        # Check goal state reached
-        if pzh.is_goal_puzzle(puzzle):
+        # Check if heuristic is 0 (goal state)
+        if h_cost == 0:
             success = True
             break
         
@@ -78,7 +78,8 @@ def a_star(puzzle, heuristic, skip_time=False):
             if state in vis:
                 continue
             
-            heapq.heappush(heap, (new_g_cost + heuristic(state), new_g_cost, puzzle, state))
+            new_h_cost = heuristic(state)
+            heapq.heappush(heap, (new_g_cost + new_h_cost, new_h_cost, new_g_cost, puzzle, state))
     
     solution_space = pzh.retrace_solution_path(puzzle, parents, success)
 
