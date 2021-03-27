@@ -30,6 +30,6 @@ Running the analysis will generate a file `outputs/analysis.txt`, compiling all 
 python scale_up.py --start_size=<integer> --end_size==<integer> --num_puzzles=<integer>
 ```
 
-In our case, the most performant algorithm was the A* H2 variant. Running scale up will automatically and randomly generate the amount of puzzles specified by the `num_puzzles` parameter. The puzzles will start off with `start_size` length specified and will scale up to the `end_size` length specified (End size must be greater than start size). 
+In our case, the most performant algorithm was the the A* H1 variant. Running scale up will automatically and randomly generate the amount of puzzles specified by the `num_puzzles` parameter. The puzzles will start off with `start_size` length specified and will scale up to the `end_size` length specified (End size must be greater than start size). 
 
 Running scale up will generate a file `outputs/scale_up_analysis.txt`, compiling all the data and results from the scale up analysis run. Solution and search paths will also be generated for each puzzle and will be stored within the `outputs/scale_up_analysis_paths/` folder.
