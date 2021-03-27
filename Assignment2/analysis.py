@@ -59,7 +59,7 @@ if __name__ == "__main__":
         with open('puzzles.txt', 'r') as f:
             puzzles.extend(make_puzzle_tuples(PUZZLE_SIZE, l.strip().split()) for l in f)
     else:
-        puzzles, _ = generate_puzzles(PUZZLE_SIZE, NUM_PUZZLES)
+        puzzles = generate_puzzles(PUZZLE_SIZE, NUM_PUZZLES)
     
     # Algo set to test
     algo_set = [('DFS', dfs, None), ('ID_DFS', iterative_deepening, None), \

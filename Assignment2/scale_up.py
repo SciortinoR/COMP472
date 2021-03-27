@@ -6,7 +6,7 @@ from random import shuffle
 from analysis import run_analysis
 from a_star import h2, a_star
 from puzzle_helper import write_analysis, extend_puzzles, \
-                            make_puzzle_tuples, generate_puzzles
+                            make_puzzle_tuples, gen_linear_puzzles
 
 
 # Define and parse input arguments
@@ -37,7 +37,7 @@ def run_scale_up(a_type, f, linear_puzzles, algo_set):
 
 if __name__ == "__main__":
     # Generate puzzles
-    _, linear_puzzles = generate_puzzles(PUZZLE_START_SIZE, NUM_PUZZLES)
+    puzzles = gen_linear_puzzles(PUZZLE_START_SIZE, NUM_PUZZLES)
 
     # Algo to test
     algo_set = [('A_Star_H2', a_star, h2)]
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     f = open(f, 'w')
 
     # Run scale up analysis
-    run_scale_up('scale_up_analysis', f, linear_puzzles, algo_set)
+    run_scale_up('scale_up_analysis', f, puzzles, algo_set)
     print(f"Full scale-up analysis completed!")
 
     f.close()

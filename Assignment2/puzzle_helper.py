@@ -121,19 +121,29 @@ def extend_puzzles(puzzles, size):
 
 # Generates puzzles
 def generate_puzzles(size, num_puzzles):
-    tuple_puzzles = []
-    linear_puzzles = []
+    puzzles = []
 
     p = [str(i+1) for i in range(size**2)]
     with open("puzzles.txt", 'w') as f:
         for _ in range(num_puzzles):
             shuffle(p)
             f.write(' '.join(p)+'\n')
-            tuple_puzzles.append(make_puzzle_tuples(size, p))
-            linear_puzzles.append(list(map(int, p)))
+            puzzles.append(make_puzzle_tuples(size, p))
     f.close()
 
-    return tuple_puzzles, linear_puzzles
+    return puzzles
+
+
+# Generate linear puzzles for scale up
+def gen_linear_puzzles(size, num_puzzles):
+    puzzles = []
+    p = [str(i+1) for i in range(size**2)]
+    
+    for _ in range(num_puzzles):
+        shuffle(p)
+        puzzles.append(list(map(int, p)))
+
+    return puzzles
 
 
 # Makes tuples of string puzzle
