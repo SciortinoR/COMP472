@@ -4,25 +4,24 @@ import collections
 import puzzle_helper as pzh
 
 
-# Heuristic 1: Returns number of positions out of place in puzzle
+# Heuristic 1: Returns the Manhattan distance of passed state
 # NOT ADMISSIBLE:
 # (2,1,3)
 # (4,5,6)
 # (7,8,9)
 # h1(state) = 2, Real Cost = 1
 def h1(puzzle):
-    val = 1
-    count = 0
+    s = 0
     for i in range(len(puzzle)):
         for j in range(len(puzzle)):
-            if puzzle[i][j] != val:
-                count += 1
-            val += 1
-    return count
+            val = puzzle[i][j]
+            real_row = (val-1) // len(puzzle)
+            real_col = (val-1) % len(puzzle)
+            s += abs(i-real_row) + abs(j-real_col)
+    return s 
 
 
 # Heuristic 2: Returns the Manhattan distance of passed state divided by 2
-# (sum of all the distances by which positions are out of place)
 # ADMISSIBLE:
 # (2,1,3)
 # (4,5,6)

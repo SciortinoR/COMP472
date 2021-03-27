@@ -4,7 +4,7 @@ import argparse
 from random import shuffle
 
 from analysis import run_analysis
-from a_star import h2, a_star
+from a_star import h1, a_star
 from puzzle_helper import write_analysis, extend_puzzles, \
                             make_puzzle_tuples, gen_linear_puzzles
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     puzzles = gen_linear_puzzles(PUZZLE_START_SIZE, NUM_PUZZLES)
 
     # Algo to test
-    algo_set = [('A_Star_H2', a_star, h2)]
+    algo_set = [('A_Star_H1', a_star, h1)]
 
     # Open output file
     f = 'outputs//scale_up_analysis.txt'
