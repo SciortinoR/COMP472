@@ -19,3 +19,4 @@ venv.bak/
 *.pdf
 *.txt
 *.joblib
+*.zip
