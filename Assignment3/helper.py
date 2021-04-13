@@ -6,9 +6,7 @@ def get_next_removals(n_tokens, n_taken_tokens, taken_tokens, last_move):
     if n_taken_tokens == 0:
         return [i for i in range(1, (n_tokens+1)//2, 2)]
 
-    next_removals = get_factors(last_move, taken_tokens) + get_multiples(last_move, n_tokens, taken_tokens)
-    
-    return next_removals
+    return get_factors(last_move, taken_tokens) + get_multiples(last_move, n_tokens, taken_tokens)
 
 
 # Gets all multiples of last move
