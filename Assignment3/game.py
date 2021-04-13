@@ -8,7 +8,7 @@ def get_possible_moves(N, tokens, last_move, isFirstMove):
     if last_move == 1:
         return [i for i in range(2, N + 1) if i in tokens]
 
-    factors = [i for i in range(1, last_move + 1) if not last_move % i and i in tokens]
+    factors = [i for i in range(1, last_move + 1) if i in tokens and not last_move % i]
     multiples = [i for i in range(last_move * 2, N + 1, last_move) if i in tokens]
 
     return factors + multiples
@@ -26,16 +26,13 @@ def evaluate_board(N, tokens, last_move, isMaximizingTurn):
         count = len([i for i in range(last_move * 2, N + 1, last_move) if i in tokens])
         score = 0.7 if count & 1 else -0.7
     else:
-        max_prime = 0
+        max_prime = N + 1
         for i in range(last_move - 1, 0, -1):
             if not last_move % i and is_prime(i):
                 max_prime = i
                 break
-        if max_prime == 0:
-            score = -0.6
-        else:
-            count = len([i for i in range(max_prime, N + 1, max_prime) if i in tokens])
-            score = 0.6 if count & 1 else -0.6
+        count = len([i for i in range(max_prime, N + 1, max_prime) if i in tokens])
+        score = 0.6 if count & 1 else -0.6
     return score if isMaximizingTurn else -score
 
 
