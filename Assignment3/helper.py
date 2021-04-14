@@ -80,7 +80,7 @@ def board_eval(last_move, taken_tokens, next_removals, is_max_turn):
     if len(next_removals) == 0:
         res = -1.0
     elif not taken_tokens[1]:
-        res = 0.0
+        return res
     elif last_move == 1:
         res = 0.5 if len(next_removals)%2 != 0 else -0.5
     elif is_prime(last_move):
