@@ -53,7 +53,7 @@ def max_value(n_tokens, n_taken_tokens, taken_tokens, last_move, depth, max_dept
 
 
 # Plays Min Player turn
-def min_value(n_tokens, n_taken_tokens, taken_tokens, last_move, depth, max_depth, alpha, beta, statistics):
+def min_value(n_tokens, n_taken_tokens, taken_tokens, last_move, depth, max_depth, alpha, beta, stats):
     stats['max_depth'] = max(stats['max_depth'], depth)
     stats['nodes_vis'] += 1
 
@@ -70,7 +70,7 @@ def min_value(n_tokens, n_taken_tokens, taken_tokens, last_move, depth, max_dept
     for move in next_removals:
         taken_tokens[move] = True
 
-        v2, _ = max_value(n_tokens, n_taken_tokens + 1, taken_tokens, move, depth + 1, max_depth, alpha, beta, statistics)
+        v2, _ = max_value(n_tokens, n_taken_tokens + 1, taken_tokens, move, depth + 1, max_depth, alpha, beta, stats)
 
         branches_visited += 1
 

@@ -105,6 +105,5 @@ def print_stats(best_move, value, stats):
     print(f"Number of Nodes Visited: {stats['nodes_vis']}")
     print(f"Number of Nodes Evaluated: {stats['nodes_eval']}")
     print(f"Max Depth Reached: {stats['max_depth']}")
-    print(f"Avg Effective Branching Factor: {0 if len(stats['branching_factors']) == 0 else sum(stats['branching_factors']) / len(stats['branching_factors']):.1f}")
-    print()
+    print(f"Avg Effective Branching Factor: {0 if len(stats['branching_factors']) == 0 else sum(stats['branching_factors']) / len(stats['branching_factors']):.1f}\n")
     print(f"Execution time: {stats['end_time'] - stats['start_time']} seconds")
