@@ -46,7 +46,7 @@ def max_value(N, tokens, last_move, depth, max_depth, alpha, beta, stats):
         score, _ = min_value(N, tokens, move, depth + 1, max_depth, alpha, beta, stats)
         tokens.add(move)  # Undo move
 
-        if score > v:
+        if score > v or (score == v and (best_move is None or move < best_move)):
             v, best_move = score, move
             alpha = max(alpha, v)
         if v >= beta:
@@ -79,7 +79,7 @@ def min_value(N, tokens, last_move, depth, max_depth, alpha, beta, stats):
         score, _ = max_value(N, tokens, move, depth + 1, max_depth, alpha, beta, stats)
         tokens.add(move)  # Undo move
 
-        if score < v:
+        if score < v or (score == v and (best_move is None or move < best_move)):
             v, best_move = score, move
             beta = min(beta, v)
         if v <= alpha:
